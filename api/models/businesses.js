@@ -31,6 +31,6 @@ allowNull:true
 }
 );
 
-business.HasMany(service);
+business.hasMany(service);
 
 module.exports = business;

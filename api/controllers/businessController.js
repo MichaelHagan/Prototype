@@ -1,55 +1,42 @@
 const Business = require('../models/businesses');
-const { compare } = require('../utils/sortHelper');
+const { sort } = require('../utils/sortHelper');
+
 
 const getAllBusinesses = async (req, res) => {
 
   try {
 
-    let collumn = req.query._sort;
-
-    Order.findAll()
+    Business.findAll()
       .then(businesses => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
         res.header('X-Total-Count', `${businesses.length}`);
-
-        if (collumn === "id" || collumn === "DeliveryFeeId") {
-          req.query._business === "ASC" ? businesses.sort((a, b) => parseInt(a[collumn]) - parseInt(b[collumn])) : businesses.sort((a, b) => parseInt(b[collumn]) - parseInt(a[collumn]));
-          businesses = businesses.slice(req.query._start, req.query._end);
-        } else if (collumn === "total_price" || collumn === "createdAt" || collumn === "updatedAt" || collumn === "payment") {
-          req.query._business === "ASC" ? businesses.sort((a, b) => a[collumn] - b[collumn]) : businesses.sort((a, b) => b[collumn] - a[collumn]);
-          businesses = businesses.slice(req.query._start, req.query._end);
-        }
-        else {
-          businesses.sort((a, b) => compare(a[collumn], b[collumn], req.query._business));
-          businesses = businesses.slice(req.query._start, req.query._end);
-        }
-        res.send(businesses);
+        let sortedBusinesses = sort(req, businesses);
+        res.send(sortedBusinesses);
       })
       .catch(err => {
         console.log(err)
         res.send("Error")
       })
-
   } catch (e) {
     res.send(e)
   }
 };
 
-const getAllBusinessesByUser = async (req, res) => {
+const getAllBusinessesByJobOwner = async (req, res) => {
+
   try {
 
     let {
-      userId
+      jobOwnerId
     } = req.params;
 
-    Order.findAll({
-      where: { userId },
-    }).then(businesses => {
-      res.send(businesses);
-    }).catch(err => {
-      console.log(err)
-      res.send("Error")
+    let businesses = Business.findAll({
+      where: { jobOwnerId: jobOwnerId },
     });
+
+    let sortedBusinesses = sort(req, orders);
+
+    res.send(sortedBusinesses);
 
   } catch (e) {
     console.log(e);
@@ -57,16 +44,15 @@ const getAllBusinessesByUser = async (req, res) => {
   }
 };
 
-const getOrderById = async (req, res) => {
+const getBusinessById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Order.findOne({
+    const row = await Business.findOne({
       where: { id: id },
     });
-
     res.json(row);
   } catch (e) {
     res.send(e)
@@ -74,51 +60,44 @@ const getOrderById = async (req, res) => {
 
 };
 
-const addOrder = async (req, res) => {
+const addBusiness = async (req, res) => {
 
-  let {
-    details,
-    customer_name,
-    customer_number,
-    total_price,
-    business_state,
-    payment,
-    payment_type,
-    DeliveryFeeId
-  } = req.body;
+  try {
 
-  Order.create({
-    details,
-    customer_name,
-    customer_number,
-    total_price,
-    business_state,
-    payment,
-    payment_type,
-    DeliveryFeeId
-  }).then(business => {
-    res.send(business);
+    let {
+      name,
+      description,
+      available
+    } = req.body;
+
+    Business.create({
+      name,
+      description,
+      available
+    }).then(business => {
+      res.send(business);
+    }
+    ).catch(err => {
+      res.send(err.errors[0].message);
+    })
+
+  } catch (e) {
+    res.status(500).send();
   }
-  ).catch(err => {
-    res.send(err.errors[0].message);
-  })
+
 
 };
 
-const editOrderById = async (req, res) => {
+const editBusinessById = async (req, res) => {
 
   try {
     const { id } = req.params;
     let output_str = "";
 
     let collumns = [
-      "details",
-      "customer_name",
-      "customer_number",
-      "total_price",
-      "business_state",
-      "payment",
-      "payment_type",
+      "name",
+      "description",
+      "available"
     ]
 
     let check = true; //Will be used to res.send text if invalid or no collumn name is passed
@@ -129,12 +108,13 @@ const editOrderById = async (req, res) => {
         check = false;
         let key = element;
         const value = req.body[key];
-        await Order.update(
-          { [key]: value }, 	// attribute
-          { where: { id: id } }			// condition
-        );
 
-        output_str += `Order ${key} was updated with value ${value}\n`;
+          await Business.update(
+            { [key]: value }, 	// attribute
+            { where: { id: id } }			// condition
+          );
+
+        output_str += `Business ${key} was updated with value ${value}\n`;
       }
     }
 
@@ -146,27 +126,27 @@ const editOrderById = async (req, res) => {
     }
 
   } catch (e) {
-    res.send(e)
+    res.send(e.message)
   }
 
 };
 
-const deleteOrderById = async (req, res) => {
+const deleteBusinessById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Order.findOne({
+    const row = await Business.findOne({
       where: { id: id },
     });
 
     if (row) {
       await row.destroy(); // deletes the row
-      res.json(row);
-      console.log(`Order deleted succesfully.`);
+      res.json(row)
+      console.log(`Entry for ${row.name} deleted succesfully.`);
     } else {
-      res.send('Order does not exist.')
+      res.send('Business does not exist.')
     }
   } catch (e) {
     res.send(e)
@@ -174,11 +154,12 @@ const deleteOrderById = async (req, res) => {
 };
 
 
+
 module.exports = {
   getAllBusinesses,
-  getAllBusinessesByUser,
-  getOrderById,
-  addOrder,
-  editOrderById,
-  deleteOrderById,
+  getAllBusinessesByJobOwner,
+  getBusinessById,
+  addBusiness,
+  editBusinessById,
+  deleteBusinessById
 };

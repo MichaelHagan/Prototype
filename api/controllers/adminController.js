@@ -2,32 +2,19 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/admins');
 const bcrypt = require('bcrypt');
-const { compare } = require('../utils/sortHelper');
+const { sort } = require('../utils/sortHelper');
 
 
 const getAllAdmins = async (req, res) => {
 
   try {
-    let collumn = req.query._sort;
 
     Admin.findAll()
       .then(admins => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
         res.header('X-Total-Count', `${admins.length}`);
-
-        if (collumn === "id") {
-          req.query._order === "ASC" ? admins.sort((a, b) => parseInt(a[collumn]) - parseInt(b[collumn])) : admins.sort((a, b) => parseInt(b[collumn]) - parseInt(a[collumn]));
-          admins = admins.slice(req.query._start, req.query._end);
-        } else if (collumn === "superAdmin" || collumn === "createdAt" || collumn === "updatedAt") {
-          req.query._order === "ASC" ? admins.sort((a, b) => a[collumn] - b[collumn]) : admins.sort((a, b) => b[collumn] - a[collumn]);
-          admins = admins.slice(req.query._start, req.query._end);
-        }
-        else if (collumn !== undefined) {
-          admins.sort((a, b) => compare(a[collumn], b[collumn], req.query._order));
-          admins = admins.slice(req.query._start, req.query._end);
-        }
-
-        res.send(admins);
+        let sortedAdmins = sort(req, admins);
+        res.send(sortedAdmins);
       })
       .catch(err => {
         console.log(err)
@@ -62,7 +49,6 @@ const addAdmin = async (req, res) => {
       name,
       email,
       phone_number,
-      superAdmin,
       password,
     } = req.body;
 
@@ -72,7 +58,6 @@ const addAdmin = async (req, res) => {
       name,
       email: email.toLowerCase(),
       phone_number,
-      superAdmin,
       password: hashedPassword,
     }).then(admin => {
       res.send(admin);
@@ -117,7 +102,7 @@ const adminLogin = async (req, res) => {
       }
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '6h' })
 
-      res.json({ accessToken: accessToken, name: row.name, super: row.superAdmin });
+      res.json({ accessToken: accessToken, name: row.name });
     } else {
       res.status(401).send(`Wrong Password`);
     }
@@ -138,7 +123,6 @@ const editAdminById = async (req, res) => {
       "name",
       "email",
       "phone_number",
-      "superAdmin",
       "password",
     ]
 
