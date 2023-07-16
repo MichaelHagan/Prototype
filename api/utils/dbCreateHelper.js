@@ -22,7 +22,7 @@ const dbConfig = {
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   port: 5432,
-  host: '127.0.0.1'
+  host: process.env.DATABASE_HOST
 };
 
 
