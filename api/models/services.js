@@ -35,6 +35,6 @@ allowNull:false
 }
 );
 
-service.HasMany(order);
+service.hasMany(order);
 
 module.exports = service;

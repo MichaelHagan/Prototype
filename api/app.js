@@ -4,15 +4,21 @@ const cors = require("cors");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-let { initializeDatabase } = require('./utils/dbCreateHelper');
+let { initializeDatabase, runSeeders } = require('./utils/dbCreateHelper');
 
 const db = require('./config/database');
 const Admin = require('./models/admins');
 const adminSeeder = require('./seeders/adminSeeder');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 let adminsRouter = require('./routes/admin');
+let businessRouter = require('./routes/business');
+let indexRouter = require('./routes/index');
+let jobOwnerRouter = require('./routes/jobOwner');
+let locationRouter = require('./routes/location');
+let orderRouter = require('./routes/order');
+let serviceRouter = require('./routes/service')
+let usersRouter = require('./routes/user');
+
 
 var app = express();
 
@@ -27,9 +33,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/admins', adminsRouter);
+app.use('/businesses', businessRouter);
+app.use('/', indexRouter);
+app.use('/jobowners', jobOwnerRouter);
+app.use('/locations', locationRouter);
+app.use('/orders', orderRouter);
+app.use('/services', serviceRouter)
+app.use('/users', usersRouter);
 
 
 //db models sync
@@ -38,15 +49,7 @@ initializeDatabase().then((res) => {
     console.log('models synced successfully')
     
     // Check if the admin table is empty
-    Admin.count().then((countResponse) => {
-      
-      if (countResponse === 0) {
-        // Seed the admin table with data
-        adminSeeder.up(null, Admin.sequelize).then((seedResponse) => {
-          console.log(`Base administrator created. You can log in with "admin" as username and password`);
-        });
-      }
-    });
+   runSeeders();
     
   })
 }).catch((err) => {

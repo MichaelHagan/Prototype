@@ -1,20 +1,20 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const Admin = require('../models/admins');
+const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const { sort } = require('../utils/sortHelper');
 
 
-const getAllAdmins = async (req, res) => {
+const getAllUsers = async (req, res) => {
 
   try {
 
-    Admin.findAll()
-      .then(admins => {
+    User.findAll()
+      .then(users => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.header('X-Total-Count', `${admins.length}`);
-        let sortedAdmins = sort(req, admins);
-        res.send(sortedAdmins);
+        res.header('X-Total-Count', `${users.length}`);
+        let sortedUsers = sort(req, users);
+        res.send(sortedUsers);
       })
       .catch(err => {
         console.log(err)
@@ -25,13 +25,13 @@ const getAllAdmins = async (req, res) => {
   }
 };
 
-const getAdminById = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Admin.findOne({
+    const row = await User.findOne({
       where: { id: id },
     });
     res.json(row);
@@ -41,7 +41,7 @@ const getAdminById = async (req, res) => {
 
 };
 
-const addAdmin = async (req, res) => {
+const addUser = async (req, res) => {
 
   try {
 
@@ -54,13 +54,13 @@ const addAdmin = async (req, res) => {
 
     let hashedPassword = await bcrypt.hash(password, 10);
 
-    Admin.create({
+    User.create({
       name,
       email: email.toLowerCase(),
       phone_number,
       password: hashedPassword,
-    }).then(admin => {
-      res.send(admin);
+    }).then(user => {
+      res.send(user);
     }
     ).catch(err => {
       res.send(err.errors[0].message);
@@ -73,7 +73,7 @@ const addAdmin = async (req, res) => {
 
 };
 
-const adminLogin = async (req, res) => {
+const userLogin = async (req, res) => {
   try {
     let {
       email,
@@ -81,18 +81,18 @@ const adminLogin = async (req, res) => {
       password
     } = req.body;
 
-    const row = email ? await Admin.findOne({
+    const row = email ? await User.findOne({
       where: {
         email: email.toLowerCase()
       },
-    }) : await Admin.findOne({
+    }) : await User.findOne({
       where: {
         phone_number: number
       },
     });
 
     if (!row) {
-      return res.status(400).send("Admin not found");
+      return res.status(400).send("User not found");
     }
 
     if (await bcrypt.compare(password, row.password)) {
@@ -113,7 +113,7 @@ const adminLogin = async (req, res) => {
 
 };
 
-const editAdminById = async (req, res) => {
+const editUserById = async (req, res) => {
 
   try {
     const { id } = req.params;
@@ -137,25 +137,25 @@ const editAdminById = async (req, res) => {
 
         if (key == "password") {
           //skip password update if password is unchanged
-          const user = await Admin.findOne({
+          const user = await User.findOne({
             where: { id: id },
           });
           if (user.password === value) continue;
 
           let hashedPassword = await bcrypt.hash(value, 10); //hash password
 
-          await Admin.update(
+          await User.update(
             { [key]: hashedPassword }, 	// attribute
             { where: { id: id } }			// condition
           );
         } else {
-          await Admin.update(
+          await User.update(
             { [key]: value }, 	// attribute
             { where: { id: id } }			// condition
           );
         }
 
-        output_str += `Admin ${key} was updated with value ${value}\n`;
+        output_str += `User ${key} was updated with value ${value}\n`;
       }
     }
 
@@ -172,13 +172,13 @@ const editAdminById = async (req, res) => {
 
 };
 
-const deleteAdminById = async (req, res) => {
+const deleteUserById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Admin.findOne({
+    const row = await User.findOne({
       where: { id: id },
     });
 
@@ -187,7 +187,7 @@ const deleteAdminById = async (req, res) => {
       res.json(row)
       console.log(`Entry for ${row.name} deleted succesfully.`);
     } else {
-      res.send('Admin does not exist.')
+      res.send('User does not exist.')
     }
   } catch (e) {
     res.send(e)
@@ -197,10 +197,10 @@ const deleteAdminById = async (req, res) => {
 
 
 module.exports = {
-  getAllAdmins,
-  getAdminById,
-  addAdmin,
-  adminLogin,
-  editAdminById,
-  deleteAdminById
+  getAllUsers,
+  getUserById,
+  addUser,
+  userLogin,
+  editUserById,
+  deleteUserById
 };
