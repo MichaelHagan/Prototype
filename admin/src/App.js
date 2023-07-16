@@ -1,5 +1,11 @@
-import { fetchUtils, Admin, Resource, ShowGuesser, ListGuesser,EditGuesser } from "react-admin";
-import PaymentsIcon from '@mui/icons-material/Payments';
+import { fetchUtils, Admin, Resource, ListGuesser,EditGuesser } from "react-admin";
+import {AdminList, AdminEdit, AdminCreate} from "./components/admins/Admins";
+import {JobOwnerList, JobOwnerEdit, JobOwnerCreate} from "./components/jobowners/JobOwners";
+import {UserList, UserEdit, UserCreate} from "./components/users/Users";
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessIcon from '@mui/icons-material/Business';
+import WorkIcon from '@mui/icons-material/Work';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LoginPage from "./components/login/LoginPage";
 import Provider from "./dataProvider.ts";
 import OrderIcon from "@mui/icons-material/DeliveryDining";
@@ -42,7 +48,7 @@ const App = () => (
     list={ListGuesser} 
     edit={EditGuesser} 
     create={EditGuesser}
-    icon={OrderIcon} 
+    icon={WorkIcon} 
     />
 
     <Resource 
@@ -50,7 +56,7 @@ const App = () => (
     list={ListGuesser} 
     edit={EditGuesser} 
     create={EditGuesser}
-    icon={PaymentsIcon} 
+    icon={BusinessIcon} 
     />
 
     <Resource 
@@ -58,30 +64,30 @@ const App = () => (
     list={ListGuesser} 
     edit={EditGuesser} 
     create={EditGuesser}
-    icon={PaymentsIcon} 
+    icon={LocationOnIcon} 
     />
 
     <Resource 
     name="users" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
-    icon={GroupIcon} 
+    list={UserList} 
+    edit={UserEdit} 
+    create={UserCreate}
+    icon={PersonIcon} 
     />
 
     <Resource 
     name="jobOwners" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
+    list={JobOwnerList} 
+    edit={JobOwnerEdit} 
+    create={JobOwnerCreate}
     icon={GroupIcon} 
     />
 
     <Resource 
     name="admins" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
+    list={AdminList} 
+    edit={AdminEdit}  
+    create={AdminCreate}
     icon={AdminPanelSettingsIcon} 
     />
 
