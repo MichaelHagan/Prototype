@@ -33,18 +33,19 @@ const getAllOrdersByJobOwner = async (req, res) => {
       jobOwnerId
     } = req.params;
 
-    let businesses = Business.findAll({
+    let businesses = await Business.findAll({
       where: { jobOwnerId: jobOwnerId },
     });
 
-    let services = Service.findAll({
-      where: { businessId: businesses.map(business => business.id) },
+    let services = await Service.findAll({
+      where: { BusinessId: businesses.map(business => business.id) },
     });
     
-    let orders = Order.findAll({
-      where: { serviceId: services.map(service => service.id) },
+    let orders = await Order.findAll({
+      where: { ServiceId: services.map(service => service.id) },
     });
-
+    res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+    res.header('X-Total-Count', `${orders.length}`);
     let sortedOrders = sort(req, orders);
 
     res.send(sortedOrders);

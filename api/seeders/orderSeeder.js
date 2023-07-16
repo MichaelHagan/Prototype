@@ -13,8 +13,8 @@ const seed = async () => {
         total_price: 500 * i,
         order_state: orderStates[i % 3],
         payment: false,
-        serviceId: Math.floor(Math.random() * maxServiceId) + 1,
-        userId: Math.floor(Math.random() * 2) + 1
+        ServiceId: Math.floor(Math.random() * maxServiceId) + 1,
+        UserId: Math.floor(Math.random() * 2) + 1
       });
     }
   

@@ -6,11 +6,11 @@ export const authProvider = {
     try {
       let isnum = /^[+]?\d+$/.test(emailorphone); //TODO: Add handler for 233 instances
       let res = isnum
-        ? await axios.post(`{http://localhost:5000}/admins/login`, {
+        ? await axios.post(`{http://localhost:5000}/jobowners/login`, {
             number: emailorphone,
             password,
           })
-        : await axios.post("http://localhost:5000/admins/login", {
+        : await axios.post("http://localhost:5000/jobowners/login", {
             email: emailorphone,
             password,
           });
@@ -21,6 +21,7 @@ export const authProvider = {
 
       localStorage.setItem("auth", res.data.accessToken);
       localStorage.setItem("name", res.data.name);
+      localStorage.setItem("id",res.data.id)
       return Promise.resolve();
     } catch (e) {
       console.log(e.message);
@@ -30,6 +31,7 @@ export const authProvider = {
   logout: () => {
     localStorage.removeItem("auth");
     localStorage.removeItem("name");
+    localStorage.removeItem("id")
     return Promise.resolve();
   },
   // called when the API returns an error

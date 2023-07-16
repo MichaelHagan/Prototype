@@ -30,11 +30,12 @@ const getAllBusinessesByJobOwner = async (req, res) => {
       jobOwnerId
     } = req.params;
 
-    let businesses = Business.findAll({
+    let businesses = await Business.findAll({
       where: { jobOwnerId: jobOwnerId },
     });
-
-    let sortedBusinesses = sort(req, orders);
+    res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+    res.header('X-Total-Count', `${businesses.length}`);
+    let sortedBusinesses = sort(req, businesses);
 
     res.send(sortedBusinesses);
 

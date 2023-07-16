@@ -48,8 +48,8 @@ initializeDatabase().then((res) => {
   db.sync().then((result) => {
     console.log('models synced successfully')
     
-    // Check if the admin table is empty
-   runSeeders();
+    // Run Seeders
+    // runSeeders();
     
   })
 }).catch((err) => {

@@ -23,7 +23,7 @@ const seed = async () => {
         price: '1000',
         available: true,
         category: categories[i % 5],
-        businessId: Math.floor(Math.random() * maxBusinessId) + 1,
+        BusinessId: Math.floor(Math.random() * maxBusinessId) + 1,
       });
     }
   

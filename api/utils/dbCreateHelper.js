@@ -47,12 +47,12 @@ const runSeeders = async() =>{
   try {
     // Run seeders sequentially
     await adminSeeder.up(null, Admin.sequelize);
-    await businessSeeder.up(null, Bussiness.sequelize);
-    await jobOwnerSeeder.up(null, JobOwner.sequelize);
-    await locationSeeder.up(null, Location.sequelize);
-    await orderSeeder.up(null, Order.sequelize);
-    await serviceSeeder.up(null, Service.sequelize);
     await userSeeder.up(null, User.sequelize);
+    await locationSeeder.up(null, Location.sequelize);
+    await jobOwnerSeeder.up(null, JobOwner.sequelize);
+    await businessSeeder.up(null, Bussiness.sequelize);
+    await serviceSeeder.up(null, Service.sequelize);
+    await orderSeeder.up(null, Order.sequelize);
 
     console.log('Seeders completed successfully');
   } catch (error) {

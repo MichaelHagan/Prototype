@@ -25,7 +25,7 @@ const compare = (a,b,sort)=>{
   }
 
 const sort = (req, data)=>{
-  if(data == undefined || data.length === 0){return []}
+  if(data == undefined || data.length === 0 ){return []}
   let collumn = req.query._sort;
   
   if (typeof data[0][collumn]==="number" || typeof data[0][collumn] === "boolean" || collumn === "createdAt" || collumn === "updatedAt" ) {

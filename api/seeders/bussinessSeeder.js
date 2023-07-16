@@ -7,35 +7,40 @@ const seed = async () => {
         description: '5-star fancy hotel',
         available: true,
         services: " ",
-        locationId:1
+        LocationId:1,
+        jobOwnerId:1
       },
       {
         name: 'Luxury Resorts',
         description: 'Exquisite beachfront resort',
         available: true,
         services: " ",
-        locationId:2
+        LocationId:2,
+        jobOwnerId:2
       },
       {
         name: 'Grand Plaza',
         description: 'Elegant city center hotel',
         available: true,
         services: " ",
-        locationId:3
+        LocationId:3,
+        jobOwnerId:1
       },
       {
         name: 'Mountain Lodge',
         description: 'Scenic retreat in the mountains',
         available: true,
         services: " ",
-        locationId:4
+        LocationId:4,
+        jobOwnerId:2
       },
       {
         name: 'Seaside Villas',
         description: 'Charming coastal cottages',
         available: true,
         services: " ",
-        locationId:5
+        LocationId:5,
+        jobOwnerId:1
       }
     ];
   };

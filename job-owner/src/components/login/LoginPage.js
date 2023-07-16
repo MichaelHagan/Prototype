@@ -18,7 +18,7 @@ export default function LoginPage() {
     await login({ emailorphone, password }).catch(() =>
       notify('Invalid email or password')
     );
-    // window.location.reload();
+    window.location.reload();
   };
 
 
