@@ -27,6 +27,6 @@ allowNull:false
 }
 );
 
-jobOwner.HasMany(business);
+jobOwner.hasMany(business);
 
 module.exports = jobOwner;
