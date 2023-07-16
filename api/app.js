@@ -49,7 +49,7 @@ initializeDatabase().then((res) => {
     console.log('models synced successfully')
     
     // Run Seeders
-    // runSeeders();
+    runSeeders();
     
   })
 }).catch((err) => {

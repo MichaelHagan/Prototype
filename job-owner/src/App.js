@@ -1,8 +1,9 @@
 import { fetchUtils, Admin, Resource, ListGuesser,EditGuesser } from "react-admin";
-import PaymentsIcon from '@mui/icons-material/Payments';
 import LoginPage from "./components/login/LoginPage";
 import Provider from "./dataProvider.ts";
 import OrderIcon from "@mui/icons-material/DeliveryDining";
+import BusinessIcon from '@mui/icons-material/Business';
+import WorkIcon from '@mui/icons-material/Work';
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { authProvider } from './authProvider';
 import './App.scss';
@@ -41,7 +42,7 @@ const App = () => (
     list={ListGuesser} 
     edit={EditGuesser} 
     create={EditGuesser}
-    icon={OrderIcon} 
+    icon={WorkIcon} 
     />
 
     <Resource 
@@ -49,7 +50,7 @@ const App = () => (
     list={ListGuesser} 
     edit={EditGuesser} 
     create={EditGuesser}
-    icon={PaymentsIcon} 
+    icon={BusinessIcon} 
     />
 
    </Admin>

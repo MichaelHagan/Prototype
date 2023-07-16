@@ -1,6 +1,6 @@
 
 const compare = (a,b,sort)=>{
-  if(a!== null && b!== null){
+  if(a && b){
   let first = a.split(' ').join('').toLowerCase();
   let second = b.split(' ').join('').toLowerCase();
   
