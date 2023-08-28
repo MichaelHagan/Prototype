@@ -14,7 +14,6 @@ const httpClient = (url, options = {}) => {
   }
   const  token  = localStorage.getItem('auth');
   options.headers.set('authorization', `Bearer ${token}`);
-  console.log("We this for here: ",url);
   return fetchUtils.fetchJson(url, options);
 };
 

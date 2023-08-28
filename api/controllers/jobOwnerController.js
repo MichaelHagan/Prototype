@@ -102,7 +102,7 @@ const jobOwnerLogin = async (req, res) => {
       }
       const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '6h' })
 
-      res.json({ id:row.id, accessToken: accessToken, name: row.name });
+      res.json({ accessToken: accessToken, name: row.name });
     } else {
       res.status(401).send(`Wrong Password`);
     }

@@ -21,7 +21,6 @@ export const authProvider = {
 
       localStorage.setItem("auth", res.data.accessToken);
       localStorage.setItem("name", res.data.name);
-      localStorage.setItem("id",res.data.id)
       return Promise.resolve();
     } catch (e) {
       console.log(e.message);

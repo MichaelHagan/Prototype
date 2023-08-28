@@ -15,7 +15,7 @@ router.get('/', authenticate, getAllBusinesses);
 
 
 // Get all businesses for a given jobOwner
-router.get('/jobOwner/:jobOwnerId', authenticate, getAllBusinessesByJobOwner)
+router.get('/jobOwner', authenticate, getAllBusinessesByJobOwner)
 
 //Get single business
 router.get('/:id', authenticate, getBusinessById)
