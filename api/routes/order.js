@@ -15,7 +15,7 @@ router.get('/', authenticate, getAllOrders);
 
 
 // Get all orders for a given jobOwner
-router.get('/jobOwner/:jobOwnerId', authenticate, getAllOrdersByJobOwner)
+router.get('/jobOwner', authenticate, getAllOrdersByJobOwner)
 
 //Get single order
 router.get('/:id', authenticate, getOrderById)

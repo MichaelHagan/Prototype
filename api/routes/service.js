@@ -15,7 +15,7 @@ router.get('/', authenticate, getAllServices);
 
 
 // Get all services for a given jobOwner
-router.get('/jobOwner/:jobOwnerId', authenticate, getAllServicesByJobOwner)
+router.get('/jobOwner', authenticate, getAllServicesByJobOwner)
 
 //Get single service
 router.get('/:id', authenticate, getServiceById)

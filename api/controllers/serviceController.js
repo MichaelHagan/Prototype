@@ -28,11 +28,11 @@ const getAllServicesByJobOwner = async (req, res) => {
   try {
 
     let {
-      jobOwnerId
-    } = req.params;
+      id
+    } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: jobOwnerId },
+      where: { jobOwnerId: id },
     });
 
     let services = await Service.findAll({

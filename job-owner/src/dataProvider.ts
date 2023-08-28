@@ -13,8 +13,7 @@ const Provider = (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
             _start: (page - 1) * perPage,
             _end: page * perPage,
         };
-        const url = `${apiUrl}/${resource}/jobOwner/${localStorage.getItem('id')}?${stringify(query)}`;
-        console.log("ME this: ",url);
+        const url = `${apiUrl}/${resource}/jobOwner?${stringify(query)}`;
         return httpClient(url).then(({ headers, json }) => {
             if (!headers.has('x-total-count')) {
                 throw new Error(
