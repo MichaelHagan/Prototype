@@ -60,7 +60,7 @@ export const BussinessEdit = () => (
         <TextInput source="description" multiline rows={5} validate={validateDescription} style={{ width: '40%' }}/>
         <BooleanInput source="available" />
         <ReferenceInput label="Location" source="LocationId" reference="locations" perPage={100}>
-            <SelectInput optionText="name" />
+            <SelectInput optionText="location" />
         </ReferenceInput>
         </SimpleForm>
     </Edit>
@@ -73,7 +73,7 @@ export const BussinessCreate = () => (
         <TextInput source="description" multiline rows={5} validate={validateDescription} style={{ width: '40%' }}/>
         <BooleanInput source="available" />
         <ReferenceInput label="Location" source="LocationId" reference="locations" perPage={100}>
-            <SelectInput optionText="name" />
+            <SelectInput optionText="location" />
         </ReferenceInput>
         <ReferenceInput label="Job Owner" source="jobOwnerId" reference="jobOwners" perPage={100}>
             <SelectInput optionText="name" />

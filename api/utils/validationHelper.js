@@ -1,7 +1,7 @@
 const { parseISO, isBefore } = require('date-fns');
 const { getAllOrdersByCarId } = require('../controllers/orderController'); 
 
-export const validateOrderTime= async(order)=>{
+const validateOrderTime= async(order)=>{
   const { pickup_time, CarId, dropoff_time } = order;
 
   // Convert pickup_time and dropoff_time strings to Date objects
@@ -50,4 +50,8 @@ export const validateOrderTime= async(order)=>{
     result: true,
     message: 'Success',
   };
+}
+
+module.exports = {
+  validateOrderTime
 }

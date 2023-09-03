@@ -34,8 +34,7 @@ const App = () => (
 <Resource 
     name="orders" 
     list={OrderList} 
-    edit={OrderEdit} 
-    create={OrderCreate} 
+    edit={OrderEdit}
     icon={OrderIcon} 
     />
     <Resource 

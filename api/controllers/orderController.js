@@ -2,6 +2,7 @@ const Order = require('../models/orders');
 const Business = require('../models/businesses');
 const Car = require('../models/cars');
 const { sort } = require('../utils/sortHelper');
+const {validateOrderTime} = require('../utils/validationHelper')
 
 
 
@@ -114,6 +115,12 @@ const addOrder = async (req, res) => {
       CarId
     } = req.body;
 
+    let validated = await validateOrderTime(req.body);
+
+    if(!validated.result){
+      return res.status(400).json({ error: validated.message });
+    }
+
     Order.create({
         details,
         customer_name,
@@ -129,11 +136,11 @@ const addOrder = async (req, res) => {
       res.send(order);
     }
     ).catch(err => {
-      res.send(err.errors[0].message);
+      console.log("Order Error:",err);
     })
 
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 
 

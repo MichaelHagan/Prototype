@@ -112,7 +112,6 @@ export const CarCreate = () => (
       <TextInput source="description" multiline rows={5} validate={validateDescription} style={{ width: '40%' }} />
       <BooleanInput source="available" />
       <NumberInput source="price" style={{ width: '20%' }} />
-      <TextInput source="imageUrl" style={{ width: '100%' }} label="Current Image Url" disabled />
       <ImageInput source="imageUrl" label="Change Image">
         <ImageField source="src" title="title" />
       </ImageInput>
