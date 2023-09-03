@@ -84,7 +84,7 @@ const Provider = (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
 
     create: (resource, params) => {
-        if (resource === 'foods') {
+        if (resource === 'cars') {
             const formData = new FormData();
 
             if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
@@ -99,8 +99,18 @@ const Provider = (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
                 method: 'POST',
                 body: formData,
             }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
+        }else if(resource === 'businesses'){
+            let createData = params.data;
+            createData.isJobOwner = true;
+            return httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: JSON.stringify(createData),
+            }).then(({ json }) => ({
+                data: { ...params.data, id: json.id },
+            }))
         }
-       else{ return httpClient(`${apiUrl}/${resource}`, {
+       else{ 
+        return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
             body: JSON.stringify(params.data),
         }).then(({ json }) => ({

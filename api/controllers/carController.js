@@ -1,7 +1,8 @@
 const Car = require('../models/cars');
 const Business = require('../models/businesses');
 const { sort } = require('../utils/sortHelper');
-const {deleteFile} = require('../utils/fileDeleteHelper')
+const {deleteFile} = require('../utils/fileDeleteHelper');
+const { cloudinary } = require('../config/cloudinary');
 
 
 const getAllCars = async (req, res) => {
@@ -74,13 +75,18 @@ const addCar = async (req, res) => {
 
   try {
 
+    const { data } = req.body;
+    const parsedData = JSON.parse(data);
+
     let {
       name,
       description,
       price,
       available,
       BusinessId
-    } = req.body;
+    } = parsedData;
+
+   
 
     if (imageData) {
       const result = await cloudinary.uploader.upload(imageData.path, {
@@ -91,21 +97,23 @@ const addCar = async (req, res) => {
   }
 
     Car.create({
-      name,
-      description,
-      price,
-      available,
-      imageUrl,
-      BusinessId
+      name:name,
+      description:description,
+      price:price,
+      available:available,
+      imageUrl:imageUrl,
+      BusinessId:BusinessId
     }).then(car => {
       res.send(car);
     }
     ).catch(err => {
+      console.log("Error Here:",err);
       res.send(err.errors[0].message);
     })
 
   } catch (e) {
     res.status(500).send();
+    console.log("Error:", e);
   }
 
 

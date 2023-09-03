@@ -68,7 +68,7 @@ export const Dashboard = () => {
 
     // Initialize the pie chart with fetched data
     chartRef.current = new Chart(chartCanvas, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: chartData.labels,
         datasets: [{

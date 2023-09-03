@@ -85,7 +85,7 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
 
     create: (resource, params) => {
-        if (resource === 'foods') {
+        if (resource === 'cars') {
             const formData = new FormData();
 
             if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
