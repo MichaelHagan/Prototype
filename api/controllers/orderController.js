@@ -1,6 +1,6 @@
 const Order = require('../models/orders');
 const Business = require('../models/businesses');
-const Service = require('../models/services');
+const Car = require('../models/cars');
 const { sort } = require('../utils/sortHelper');
 
 
@@ -25,6 +25,13 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+const getAllOrdersByCarId = async (id) =>{
+  let orders = await Order.findAll({
+    where: { CarId:id},
+  });
+  return orders;
+}
+
 const getAllOrdersByJobOwner = async (req, res) => {
 
   try {
@@ -37,12 +44,12 @@ const getAllOrdersByJobOwner = async (req, res) => {
       where: { jobOwnerId: id },
     });
 
-    let services = await Service.findAll({
+    let cars = await Car.findAll({
       where: { BusinessId: businesses.map(business => business.id) },
     });
     
     let orders = await Order.findAll({
-      where: { ServiceId: services.map(service => service.id) },
+      where: { CarId: cars.map(car => car.id) },
     });
     res.header('Access-Control-Expose-Headers', 'X-Total-Count');
     res.header('X-Total-Count', `${orders.length}`);
@@ -82,7 +89,11 @@ const addOrder = async (req, res) => {
       customer_number,
       total_price,
       order_state,
-      payment
+      payment,
+      pickup_time,
+      dropoff_time,
+      UserId,
+      CarId
     } = req.body;
 
     Order.create({
@@ -91,7 +102,11 @@ const addOrder = async (req, res) => {
         customer_number,
         total_price,
         order_state,
-        payment
+        payment,
+        pickup_time,
+        dropoff_time,
+        UserId,
+        CarId
     }).then(order => {
       res.send(order);
     }
@@ -118,7 +133,11 @@ const editOrderById = async (req, res) => {
         "customer_number",
         "total_price",
         "order_state",
-        "payment"
+        "payment",
+        "pickup_time",
+        "dropoff_time",
+        "UserId",
+        "CarId"
     ]
 
     let check = true; //Will be used to res.send text if invalid or no collumn name is passed
@@ -175,9 +194,9 @@ const deleteOrderById = async (req, res) => {
 };
 
 
-
 module.exports = {
   getAllOrders,
+  getAllOrdersByCarId,
   getAllOrdersByJobOwner,
   getOrderById,
   addOrder,
