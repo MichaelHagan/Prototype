@@ -9,11 +9,20 @@ const getAllOrders = async (req, res) => {
 
   try {
 
+    let filter = req.query.id;
+
     Order.findAll()
       .then(orders => {
+        let sortedOrders;
+        if (filter) {
+          // Apply the filter logic
+          sortedOrders = orders.filter((order) =>
+          order.id.toString().includes(filter) // Adjust the filtering condition based on your requirements
+          );
+        } else { sortedOrders = orders }
+        sortedOrders = sort(req, sortedOrders);
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.header('X-Total-Count', `${orders.length}`);
-        let sortedOrders = sort(req, orders);
+        res.header('X-Total-Count', `${sortedOrders.length}`);
         res.send(sortedOrders);
       })
       .catch(err => {
@@ -34,8 +43,10 @@ const getAllOrdersByCarId = async (id) =>{
 
 const getAllOrdersByJobOwner = async (req, res) => {
 
+  
   try {
-
+    
+    let filter = req.query.id;
     let {
       id
     } = req.payload;
@@ -51,12 +62,19 @@ const getAllOrdersByJobOwner = async (req, res) => {
     let orders = await Order.findAll({
       where: { CarId: cars.map(car => car.id) },
     });
+
+    let sortedOrders;
+    if (filter) {
+      // Apply the filter logic
+      sortedOrders = orders.filter((order) =>
+        order.id.toString().includes(filter) // Adjust the filtering condition based on your requirements
+      );
+    } else { sortedOrders = orders }
+    sortedOrders = sort(req, sortedOrders);
     res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-    res.header('X-Total-Count', `${orders.length}`);
-    let sortedOrders = sort(req, orders);
-
+    res.header('X-Total-Count', `${sortedOrders.length}`);
     res.send(sortedOrders);
-
+    
   } catch (e) {
     console.log(e);
     res.send(e);
