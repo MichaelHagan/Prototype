@@ -7,7 +7,7 @@ const Bussiness = require('../models/businesses');
 const JobOwner = require('../models/jobOwners');
 const Location = require('../models/locations');
 const Order = require('../models/orders');
-const Service = require('../models/services');
+const Car = require('../models/cars');
 const User = require('../models/users');
 
 const adminSeeder = require('../seeders/adminSeeder');
@@ -15,7 +15,7 @@ const businessSeeder = require('../seeders/bussinessSeeder');
 const jobOwnerSeeder = require('../seeders/jobOwnerSeeder');
 const locationSeeder = require('../seeders/locationSeeder');
 const orderSeeder = require('../seeders/orderSeeder');
-const serviceSeeder = require('../seeders/serviceSeeder');
+const carSeeder = require('../seeders/carSeeder');
 const userSeeder = require('../seeders/userSeeder');
 
 const dbConfig = {
@@ -51,7 +51,7 @@ const runSeeders = async() =>{
     await locationSeeder.up(null, Location.sequelize);
     await jobOwnerSeeder.up(null, JobOwner.sequelize);
     await businessSeeder.up(null, Bussiness.sequelize);
-    await serviceSeeder.up(null, Service.sequelize);
+    await carSeeder.up(null, Car.sequelize);
     await orderSeeder.up(null, Order.sequelize);
 
     console.log('Seeders completed successfully');

@@ -16,7 +16,7 @@ let indexRouter = require('./routes/index');
 let jobOwnerRouter = require('./routes/jobOwner');
 let locationRouter = require('./routes/location');
 let orderRouter = require('./routes/order');
-let serviceRouter = require('./routes/service')
+let carRouter = require('./routes/car')
 let usersRouter = require('./routes/user');
 
 
@@ -39,7 +39,7 @@ app.use('/', indexRouter);
 app.use('/jobowners', jobOwnerRouter);
 app.use('/locations', locationRouter);
 app.use('/orders', orderRouter);
-app.use('/services', serviceRouter)
+app.use('/cars', carRouter)
 app.use('/users', usersRouter);
 
 

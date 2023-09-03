@@ -3,42 +3,37 @@ const Bussiness = require('../models/businesses');
 const seed = async () => {
     return [
       {
-        name: 'Daniel Hotel',
-        description: '5-star fancy hotel',
+        name: 'Daniel Rentals',
+        description: '5-star rentals',
         available: true,
-        services: " ",
         LocationId:1,
         jobOwnerId:1
       },
       {
-        name: 'Luxury Resorts',
-        description: 'Exquisite beachfront resort',
+        name: 'Luxury Rentals',
+        description: 'Exquisite car rentals',
         available: true,
-        services: " ",
         LocationId:2,
         jobOwnerId:2
       },
       {
-        name: 'Grand Plaza',
-        description: 'Elegant city center hotel',
+        name: 'Grand Rentals',
+        description: 'Elegant car rentals',
         available: true,
-        services: " ",
         LocationId:3,
         jobOwnerId:1
       },
       {
-        name: 'Mountain Lodge',
-        description: 'Scenic retreat in the mountains',
+        name: 'Mountain Rentals',
+        description: 'Fast cars',
         available: true,
-        services: " ",
         LocationId:4,
         jobOwnerId:2
       },
       {
-        name: 'Seaside Villas',
-        description: 'Charming coastal cottages',
+        name: 'Seaside Rentals',
+        description: 'Classy cars',
         available: true,
-        services: " ",
         LocationId:5,
         jobOwnerId:1
       }

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
-const service = require('./services');
+const car = require('./cars');
 
 const business = db.define('Business',{
 id:{
@@ -21,16 +21,12 @@ available:{
 type:Sequelize.BOOLEAN,
 allowNull:false,
 defaultValue: true
-},
-services:{
-type:Sequelize.STRING,
-allowNull:true
 }
 },{
   tableName:'businesses'  
 }
 );
 
-business.hasMany(service);
+business.hasMany(car);
 
 module.exports = business;
