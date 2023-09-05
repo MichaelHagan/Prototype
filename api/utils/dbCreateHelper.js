@@ -44,7 +44,10 @@ const initializeDatabase = async () => {
 
 const runSeeders = async() =>{
  
-  try {
+     //Check user table, if empty, run seeders
+     try {
+      let countResponse = await Admin.count();
+      if(countResponse === 0){
     // Run seeders sequentially
     await adminSeeder.up(null, Admin.sequelize);
     await userSeeder.up(null, User.sequelize);
@@ -55,6 +58,7 @@ const runSeeders = async() =>{
     await orderSeeder.up(null, Order.sequelize);
 
     console.log('Seeders completed successfully');
+      }
   } catch (error) {
     console.error('Error running seeders:', error);
   }
