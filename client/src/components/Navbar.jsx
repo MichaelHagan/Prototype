@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import Logo from "../images/logo/logo.png";
 import { useState } from "react";
+import { FaTimes, FaBars } from "react-icons/fa";
+
 
 function Navbar() {
   const [nav, setNav] = useState(false);
@@ -15,7 +17,7 @@ function Navbar() {
         {/* mobile */}
         <div className={`mobile-navbar ${nav ? "open-nav" : ""}`}>
           <div onClick={openNav} className="mobile-navbar__close">
-            <i className="fa-solid fa-xmark"></i>
+            <FaTimes color="#3366FF"/>
           </div>
           <ul className="mobile-navbar__links">
             <li>
@@ -97,14 +99,14 @@ function Navbar() {
             </li>
           </ul>
           <div className="navbar__buttons">
-            <Link className="navbar__buttons__register" to="/join">
+            <Link className="navbar__buttons__register" to="/registration-login-page">
               Register
             </Link>
           </div>
 
           {/* mobile */}
           <div className="mobile-hamb" onClick={openNav}>
-            <i className="fa-solid fa-bars"></i>
+            <FaBars color="#3366FF"/>
           </div>
         </div>
       </nav>
