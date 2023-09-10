@@ -19,12 +19,20 @@ import {
   NumberInput,
   FunctionField,
   ImageField,
-  ReferenceInput
+  ReferenceInput,
+  ArrayInput,
+  SimpleFormIterator
 } from 'react-admin';
 import { Link } from 'react-router-dom';
 import { useMediaQuery } from "@mui/material";
 const validateName = maxLength(30, "Maximum number of characters exceeded.(max:30 characters)");
 const validateDescription = maxLength(120, "Maximum number of characters exceeded.(max:60 characters)");
+const validateMainImage = (value, allValues) => {
+  if (allValues.images && allValues.images.length > 0 && value === undefined) {
+    return 'Please select a main image';
+  }
+  return undefined;
+};
 
 export const CarList = () => {
 
@@ -112,9 +120,14 @@ export const CarCreate = () => (
       <TextInput source="description" multiline rows={5} validate={validateDescription} style={{ width: '40%' }} />
       <BooleanInput source="available" />
       <NumberInput source="price" style={{ width: '20%' }} />
-      <ImageInput source="imageUrl" label="Change Image">
-        <ImageField source="src" title="title" />
-      </ImageInput>
+      <ArrayInput source="images">
+          <SimpleFormIterator>
+            <ImageInput source="url" label="Image">
+              <ImageField source="src" title="title" />
+            </ImageInput>
+            <NumberField source="id" label="Main Image" validate={validateMainImage} /> {/* Add NumberField for mainImageIndex */}
+          </SimpleFormIterator>
+        </ArrayInput>
       <ReferenceInput label="Business" source="BusinessId" reference="businesses" perPage={100}>
         <SelectInput optionText="name" />
       </ReferenceInput>
