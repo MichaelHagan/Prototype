@@ -83,33 +83,49 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
                 })
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
-
     create: (resource, params) => {
         if (resource === 'cars') {
-            const formData = new FormData();
+          const formData = new FormData();         
+      
+          let imagesArray = [];
+      
+          // Check if there's a single image or multiple images
+          if (Array.isArray(params.data.images) && params.data.images.length > 0) {
+            // If there are multiple images, append them to the imagesArray
+            params.data.images.forEach((imageFile) => {
+              if (imageFile.url.rawFile instanceof File) {
+                imagesArray.push(imageFile.url.rawFile);
+              }
+            });
+          } else if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
+            // If there's only a single image, append it to the imagesArray
+            imagesArray.push(params.data.imageUrl.rawFile);
+          }
+      
+          formData.append('images', imagesArray);
+      
+          const { images, imageUrl, ...otherParams } = params.data;
+      
+          formData.append('data', JSON.stringify(otherParams));
 
-            if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
-                formData.append('image', params.data.imageUrl.rawFile);
-            }
-
-            const { imageUrl, ...otherParams } = params.data;
-
-            formData.append('data', JSON.stringify(otherParams));
-
-            return httpClient(`${apiUrl}/${resource}`, {
-                method: 'POST',
-                body: formData,
-            }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
-        }
-       else{ return httpClient(`${apiUrl}/${resource}`, {
+          console.log("Images:", imagesArray);
+          
+      
+          return httpClient(`${apiUrl}/${resource}`, {
+            method: 'POST',
+            body: formData,
+          }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
+        } else {
+            console.log("test");
+            
+          return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
             body: JSON.stringify(params.data),
-        }).then(({ json }) => ({
+          }).then(({ json }) => ({
             data: { ...params.data, id: json.id },
-        }))
-    }
-    }
-        ,
+          }));
+        }
+      },
     delete: (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'DELETE',

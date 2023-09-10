@@ -74,22 +74,17 @@ const addCar = async (req, res) => {
 
   // Assuming req.files is an array of uploaded images
   const { data } = req.body;
-  
+  const images = req.files;
   const parsedData = JSON.parse(data);
   let {
     name,
     description,
     price,
-    images,
     available,
     BusinessId
   } = parsedData;
 
-
-  console.log("ParsedData:",parsedData);
-  console.log("Images:",images[0].url.rawFile);
-  console.log("File:",req.file);
-  console.log("Files:",req.files);
+  console.log("\n\nFiles:",images);
   try {
     let imageUrl = null;
 
