@@ -13,7 +13,7 @@ const {
 } = require("../controllers/carController");
 
 //Get all cars
-router.get('/', authenticate, getAllCars);
+router.get('/', getAllCars);
 
 
 // Get all cars for a given jobOwner

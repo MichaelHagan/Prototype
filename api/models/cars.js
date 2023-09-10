@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
 const order = require('./orders');
+const image = require('./images')
 
 const car = db.define('Car',{
 id:{
@@ -35,5 +36,6 @@ defaultValue: true
 );
 
 car.hasMany(order);
+car.hasMany(image);
 
 module.exports = car;
