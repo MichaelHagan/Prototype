@@ -12,7 +12,7 @@ type:Sequelize.STRING,
 allowNull:false,
 },
 isMain:{
-type:Boolean,
+type:Sequelize.BOOLEAN,
 allowNull:false,
 defaultValue:false
 }
