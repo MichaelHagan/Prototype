@@ -36,6 +36,7 @@ function PickCar() {
                     setActive("SecondCar");
                     btnID("btn1");
                   }}
+                  style={{color:'black'}}
                 >
                   Audi A1 S-Line
                 </button>
@@ -46,6 +47,7 @@ function PickCar() {
                     setActive("FirstCar");
                     btnID("btn2");
                   }}
+                  style={{color:'black'}}
                 >
                   VW Golf 6
                 </button>
@@ -56,6 +58,7 @@ function PickCar() {
                     setActive("ThirdCar");
                     btnID("btn3");
                   }}
+                  style={{color:'black'}}
                 >
                   Toyota Camry
                 </button>
@@ -66,6 +69,7 @@ function PickCar() {
                     setActive("FourthCar");
                     btnID("btn4");
                   }}
+                  style={{color:'black'}}
                 >
                   BMW 320 ModernLine
                 </button>
@@ -76,6 +80,7 @@ function PickCar() {
                     setActive("FifthCar");
                     btnID("btn5");
                   }}
+                  style={{color:'black'}}
                 >
                   Mercedes-Benz GLK
                 </button>
@@ -86,6 +91,7 @@ function PickCar() {
                     setActive("SixthCar");
                     btnID("btn6");
                   }}
+                  style={{color:'black'}}
                 >
                   VW Passat CC
                 </button>

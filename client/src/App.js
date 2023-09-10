@@ -9,6 +9,9 @@ import Team from "./Pages/Team";
 import Contact from "./Pages/Contact";
 import Register from "./Pages/Register";
 import Join from "./Pages/Join";
+import BookCar from "./Pages/BookCar";
+import ViewRide from "./Pages/ViewRide";
+
 
 function App() {
  
@@ -23,7 +26,9 @@ function App() {
         {/* <Route path="team" element={<Team />} /> */}
         <Route path="contact" element={<Contact />} />
         <Route path="register" element={<Register/>}/>
-        <Route path="join" element={<Join />} />
+        <Route path="registration-login-page" element={<Join />} />
+        <Route path="book-a-car" element={<BookCar/>}/>
+        <Route path="view-ride-details" element={<ViewRide/>}/>
       </Routes>
     </>
   );

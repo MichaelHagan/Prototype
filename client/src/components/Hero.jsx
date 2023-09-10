@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import BgShape from "../images/hero/hero-bg.png";
-import HeroCar from "../images/hero/car.png";
+import HeroCar from "../images/hero/main-car.png";
 import { useEffect, useState } from "react";
+import {FaArrowUp} from "react-icons/fa";
 
 function Hero() {
   const [goUp, setGoUp] = useState(false);
@@ -49,7 +50,7 @@ function Hero() {
                 <Link
                   onClick={bookBtn}
                   className="hero-content__text__btns__book-ride"
-                  to="/"
+                  to="/models"
                 >
                   Book Ride &nbsp; <i className="fa-solid fa-circle-check"></i>
                 </Link>
@@ -73,7 +74,7 @@ function Hero() {
           onClick={scrollToTop}
           className={`scroll-up ${goUp ? "show-scroll" : ""}`}
         >
-          <i className="fa-solid fa-angle-up"></i>
+         <FaArrowUp color="white"/>
         </div>
       </section>
     </>
