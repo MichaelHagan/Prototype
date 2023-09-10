@@ -3,6 +3,7 @@ const Business = require('../models/businesses');
 const { sort } = require('../utils/sortHelper');
 const {deleteFile} = require('../utils/fileDeleteHelper');
 const { cloudinary } = require('../config/cloudinary');
+const Image = require('../models/images')
 
 
 const getAllCars = async (req, res) => {
@@ -69,55 +70,69 @@ const getCarById = async (req, res) => {
 };
 
 const addCar = async (req, res) => {
+  const { mainImageIndex } = req.query; // Extract mainImageIndex from query parameters
 
-  const imageData = req.file;
-  let imageUrl = imageData.filename;
+  // Assuming req.files is an array of uploaded images
+  const { data } = req.body;
+  
+  const parsedData = JSON.parse(data);
+  let {
+    name,
+    description,
+    price,
+    images,
+    available,
+    BusinessId
+  } = parsedData;
 
+
+  console.log("ParsedData:",parsedData);
+  console.log("Images:",images[0].url.rawFile);
+  console.log("File:",req.file);
+  console.log("Files:",req.files);
   try {
+    let imageUrl = null;
 
-    const { data } = req.body;
-    const parsedData = JSON.parse(data);
+    if (images.length > 0) {
+      const imageUploadPromises = images.map(async (image, index) => {
+        const result = await cloudinary.uploader.upload(image.path, {
+          upload_preset: 'test_preset',
+        });
 
-    let {
-      name,
-      description,
-      price,
-      available,
-      BusinessId
-    } = parsedData;
+        if (index === parseInt(mainImageIndex, 10)) {
+          imageUrl = result.secure_url;
+        }
 
-   
-
-    if (imageData) {
-      const result = await cloudinary.uploader.upload(imageData.path, {
-          upload_preset: 'test_preset'
+        // Create an Image entry for each uploaded image
+        return Image.create({
+          url: result.secure_url,
+          isMain: index === parseInt(mainImageIndex, 10), // Convert mainImageIndex to integer for comparison
+          carId: null, // You'll update this with the actual carId later
+        });
       });
-      imageUrl = result.secure_url;
-      deleteFile(imageData.path);
-  }
 
-    Car.create({
+      await Promise.all(imageUploadPromises);
+    }
+
+    const car = await Car.create({
       name:name,
       description:description,
       price:price,
       available:available,
       imageUrl:imageUrl,
       BusinessId:BusinessId
-    }).then(car => {
-      res.send(car);
-    }
-    ).catch(err => {
-      console.log("Error Here:",err);
-      res.send(err.errors[0].message);
-    })
+    });
 
+    // Update the carId in the Image entries
+    await Image.update({ carId: car.id }, { where: { isMain: true } });
+
+    res.send(car);
   } catch (e) {
     res.status(500).send();
     console.log("Error:", e);
   }
-
-
 };
+
 
 const editCarById = async (req, res) => {
 
