@@ -6,8 +6,9 @@ import CarBmw from "../images/cars-big/bmw320.jpg";
 import CarMercedes from "../images/cars-big/benz.jpg";
 import CarPassat from "../images/cars-big/passatcc.jpg";
 
-function BookCar() {
+function BookCar({carDetails}) {
   const [modal, setModal] = useState(false); //  class - active-modal
+
 
   // booking car
   const [carType, setCarType] = useState("");
@@ -88,6 +89,13 @@ function BookCar() {
       document.body.style.overflow = "auto";
     }
   }, [modal]);
+
+  useEffect(() => {
+    if (carDetails) {
+      setCarType(carDetails.name); // Assuming carDetails has a "name" property
+      // setCarImg(getCarImage(carDetails.name));
+    }
+  }, [carDetails]);
 
   // confirm modal booking
   const confirmBooking = (e) => {
