@@ -1,6 +1,6 @@
 import Footer from "../components/Footer";
 import HeroPages from "../components/HeroPages";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -8,8 +8,8 @@ import axios from "axios";
 function Models() {
   const navigate = useNavigate()
 
-  const bookBtn = () => {
-    navigate("/view-ride-details")
+  const bookBtn = (carDetails) => {
+    navigate("/view-ride-details", {state: {carDetails}})
   };
 
   const baseURL = "http://localhost:5000";
@@ -34,7 +34,7 @@ function Models() {
             {
               cars.map((car) => {
                 return (
-                  <div className="models-div__box">
+                  <div key={car.id} className="models-div__box">
                   <div className="models-div__box__img">
                     <img src={car.imageUrl} alt="car_img" />
                     <div className="models-div__box__descr">
@@ -43,11 +43,14 @@ function Models() {
                           <p >{car.name}</p>
                           <p style={{fontSize:"1.5rem"}}>Gh₵{car.price} per day</p>
                         </div>
+                        <div>
+                      <h4 style={{color:"#ff4d30", fonSize:"1.4rem"}}>{`${car.available ? "Available" : "Not available"}`}</h4>
+                      </div>
                       </div>
                       <div className="models-div__box__descr__name-price__details">
                         <p style={{fonSize:"1.2rem"}}>{car.description}</p>
                       </div>
-                      <div className="models-div__box__descr__name-price__btn" style={{color:"#ffffff"}} onClick={bookBtn}>
+                      <div className="models-div__box__descr__name-price__btn" style={{color:"#ffffff"}} onClick={()=> bookBtn(car)}>
                           More Details
                       </div>
                     </div>
