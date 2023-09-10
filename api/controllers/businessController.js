@@ -68,13 +68,21 @@ const addBusiness = async (req, res) => {
     let {
       name,
       description,
-      available
+      available,
+      LocationId,
+      jobOwnerId,
+      isJobOwner
     } = req.body;
+
+    let ownerId = isJobOwner?req.payload.id:jobOwnerId;
 
     Business.create({
       name,
       description,
-      available
+      available,
+      LocationId,
+      jobOwnerId:ownerId
+
     }).then(business => {
       res.send(business);
     }
@@ -98,7 +106,9 @@ const editBusinessById = async (req, res) => {
     let collumns = [
       "name",
       "description",
-      "available"
+      "available",
+      "LocationId",
+      "jobOwnerId"
     ]
 
     let check = true; //Will be used to res.send text if invalid or no collumn name is passed

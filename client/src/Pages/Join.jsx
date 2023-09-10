@@ -83,7 +83,7 @@ const Join = () => {
                   margin: "20px 0 30px",
                 }}
               >
-                Enter your personal details and start journey with us
+                Enter your personal details and start your journey with us
               </p>
               <button
                 className="ghost "

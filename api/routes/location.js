@@ -12,6 +12,10 @@ const {
 //Get all location
 router.get('/', authenticate, getAllLocations);
 
+
+//Get all location for JobOwners
+router.get('/jobOwner', authenticate, getAllLocations);
+
 //Get single location
 router.get('/:id', authenticate, getLocationById)
 

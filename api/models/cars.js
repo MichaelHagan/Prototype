@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
 const order = require('./orders');
+const image = require('./images')
 
-const service = db.define('Service',{
+const car = db.define('Car',{
 id:{
 type: Sequelize.BIGINT, 
 primaryKey: true,
@@ -11,7 +12,6 @@ autoIncrement: true
 name:{
 type:Sequelize.STRING,
 allowNull:false,
-unique:true
 },
 description:{
 type:Sequelize.STRING,
@@ -21,20 +21,21 @@ price:{
 type:Sequelize.DOUBLE,
 allowNull:false
 },
+imageUrl:{
+  type:Sequelize.STRING,
+  allowNull:false
+},
 available:{
 type:Sequelize.BOOLEAN,
 allowNull:false,
 defaultValue: true
-},
-category:{
-type:Sequelize.STRING,
-allowNull:false
 }
 },{
-  tableName:'services'  
+  tableName:'cars'  
 }
 );
 
-service.hasMany(order);
+car.hasMany(order);
+car.hasMany(image);
 
-module.exports = service;
+module.exports = car;

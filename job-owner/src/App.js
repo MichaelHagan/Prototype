@@ -1,9 +1,12 @@
-import { fetchUtils, Admin, Resource, ListGuesser,EditGuesser } from "react-admin";
+import { fetchUtils, Admin, Resource } from "react-admin";
 import LoginPage from "./components/login/LoginPage";
 import Provider from "./dataProvider.ts";
+import { BussinessList, BussinessEdit, BussinessCreate } from "./components/bussinesses/Bussinesses";
+import { CarList, CarEdit, CarCreate } from "./components/cars/Cars";
+import { OrderList, OrderEdit, OrderCreate } from "./components/orders/Orders";
 import OrderIcon from "@mui/icons-material/DeliveryDining";
-import BusinessIcon from '@mui/icons-material/Business';
-import WorkIcon from '@mui/icons-material/Work';
+import GarageIcon from '@mui/icons-material/EmojiTransportation';
+import CarIcon from '@mui/icons-material/CarRental';
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { authProvider } from './authProvider';
 import './App.scss';
@@ -28,28 +31,27 @@ const App = () => (
    dashboard={Dashboard}
    >
 
-    <Resource 
+<Resource 
     name="orders" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser} 
+    list={OrderList} 
+    edit={OrderEdit}
     icon={OrderIcon} 
     />
-
     <Resource 
-    name="services" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
-    icon={WorkIcon} 
+    name="cars" 
+    list={CarList} 
+    edit={CarEdit} 
+    create={CarCreate}
+    icon={CarIcon} 
     />
 
     <Resource 
     name="businesses" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
-    icon={BusinessIcon} 
+    list={BussinessList} 
+    edit={BussinessEdit} 
+    create={BussinessCreate}
+    icon={GarageIcon} 
+    options={{ label: "My Rentals" }}
     />
 
    </Admin>

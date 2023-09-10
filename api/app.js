@@ -7,8 +7,6 @@ var logger = require('morgan');
 let { initializeDatabase, runSeeders } = require('./utils/dbCreateHelper');
 
 const db = require('./config/database');
-const Admin = require('./models/admins');
-const adminSeeder = require('./seeders/adminSeeder');
 
 let adminsRouter = require('./routes/admin');
 let businessRouter = require('./routes/business');
@@ -16,7 +14,7 @@ let indexRouter = require('./routes/index');
 let jobOwnerRouter = require('./routes/jobOwner');
 let locationRouter = require('./routes/location');
 let orderRouter = require('./routes/order');
-let serviceRouter = require('./routes/service')
+let carRouter = require('./routes/car')
 let usersRouter = require('./routes/user');
 
 
@@ -39,7 +37,7 @@ app.use('/', indexRouter);
 app.use('/jobowners', jobOwnerRouter);
 app.use('/locations', locationRouter);
 app.use('/orders', orderRouter);
-app.use('/services', serviceRouter)
+app.use('/cars', carRouter)
 app.use('/users', usersRouter);
 
 
@@ -48,8 +46,8 @@ initializeDatabase().then((res) => {
   db.sync().then((result) => {
     console.log('models synced successfully')
     
-    // Run Seeders
-    // runSeeders();
+    // Check and run Seeders
+    runSeeders();
     
   })
 }).catch((err) => {

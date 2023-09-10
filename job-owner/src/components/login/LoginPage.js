@@ -35,7 +35,7 @@ export default function LoginPage() {
             width: '1.3em',
             padding: '5px'
           }} />
-          <h5 style={{ marginTop: '.7rem' }}>Admin Login</h5>
+          <h5 style={{ marginTop: '.7rem' }}>Login</h5>
         </div>
         <div className="registration-form row">
           <div className="col-md-12">
@@ -73,9 +73,11 @@ export default function LoginPage() {
                 />
                 <div className="input-error">{errors.password}</div>
               </div>
+              <div style={{display:"flex", justifyContent:"center"}}>
               <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
                 Login
               </button>
+              </div>
               {/* <div className="container signin">
                 <p>
                   Don't have an account? <Link to="/">Sign Up</Link>.

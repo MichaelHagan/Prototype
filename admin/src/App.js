@@ -2,9 +2,12 @@ import { fetchUtils, Admin, Resource, ListGuesser,EditGuesser } from "react-admi
 import {AdminList, AdminEdit, AdminCreate} from "./components/admins/Admins";
 import {JobOwnerList, JobOwnerEdit, JobOwnerCreate} from "./components/jobowners/JobOwners";
 import {UserList, UserEdit, UserCreate} from "./components/users/Users";
+import { BussinessList, BussinessEdit, BussinessCreate } from "./components/bussinesses/Bussinesses";
+import { CarList, CarEdit, CarCreate } from "./components/cars/Cars";
+import { OrderList, OrderEdit, OrderCreate } from "./components/orders/Orders";
 import PersonIcon from '@mui/icons-material/Person';
-import BusinessIcon from '@mui/icons-material/Business';
-import WorkIcon from '@mui/icons-material/Work';
+import GarageIcon from '@mui/icons-material/EmojiTransportation';
+import CarIcon from '@mui/icons-material/CarRental';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LoginPage from "./components/login/LoginPage";
 import Provider from "./dataProvider.ts";
@@ -37,26 +40,27 @@ const App = () => (
 
     <Resource 
     name="orders" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser} 
+    list={OrderList} 
+    edit={OrderEdit} 
+    create={OrderCreate} 
     icon={OrderIcon} 
     />
 
     <Resource 
-    name="services" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
-    icon={WorkIcon} 
+    name="cars" 
+    list={CarList} 
+    edit={CarEdit} 
+    create={CarCreate}
+    icon={CarIcon} 
     />
 
     <Resource 
     name="businesses" 
-    list={ListGuesser} 
-    edit={EditGuesser} 
-    create={EditGuesser}
-    icon={BusinessIcon} 
+    list={BussinessList} 
+    edit={BussinessEdit} 
+    create={BussinessCreate}
+    icon={GarageIcon} 
+    options={{ label: "Rental Providers" }}
     />
 
     <Resource 
@@ -81,6 +85,7 @@ const App = () => (
     edit={JobOwnerEdit} 
     create={JobOwnerCreate}
     icon={GroupIcon} 
+    options={{ label: "Job Owners" }}
     />
 
     <Resource 

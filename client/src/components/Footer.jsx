@@ -9,7 +9,7 @@ function Footer() {
                 <span>RaC</span>
               </li>
               <li>
-                We offer a big range of vehicles for all your driving needs.
+                We offer a wide range of vehicles for all your driving needs.
               </li>
               <li>
                 <a href="tel:123456789">

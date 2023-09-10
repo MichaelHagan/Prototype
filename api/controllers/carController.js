@@ -1,18 +1,20 @@
-const Service = require('../models/services');
+const Car = require('../models/cars');
 const Business = require('../models/businesses');
 const { sort } = require('../utils/sortHelper');
+const {deleteFile} = require('../utils/fileDeleteHelper');
+const { cloudinary } = require('../config/cloudinary');
 
 
-const getAllServices = async (req, res) => {
+const getAllCars = async (req, res) => {
 
   try {
 
-    Service.findAll()
-      .then(services => {
+    Car.findAll()
+      .then(cars => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.header('X-Total-Count', `${services.length}`);
-        let sortedServices = sort(req, services);
-        res.send(sortedServices);
+        res.header('X-Total-Count', `${cars.length}`);
+        let sortedCars = sort(req, cars);
+        res.send(sortedCars);
       })
       .catch(err => {
         console.log(err)
@@ -23,7 +25,7 @@ const getAllServices = async (req, res) => {
   }
 };
 
-const getAllServicesByJobOwner = async (req, res) => {
+const getAllCarsByJobOwner = async (req, res) => {
 
   try {
 
@@ -35,14 +37,14 @@ const getAllServicesByJobOwner = async (req, res) => {
       where: { jobOwnerId: id },
     });
 
-    let services = await Service.findAll({
+    let cars = await Car.findAll({
       where: { BusinessId: businesses.map(business => business.id) },
     });
     res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-    res.header('X-Total-Count', `${services.length}`);
-    let sortedServices = sort(req, services);
+    res.header('X-Total-Count', `${cars.length}`);
+    let sortedCars = sort(req, cars);
 
-    res.send(sortedServices);
+    res.send(sortedCars);
 
   } catch (e) {
     console.log(e);
@@ -50,13 +52,13 @@ const getAllServicesByJobOwner = async (req, res) => {
   }
 };
 
-const getServiceById = async (req, res) => {
+const getCarById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Service.findOne({
+    const row = await Car.findOne({
       where: { id: id },
     });
     res.json(row);
@@ -66,37 +68,58 @@ const getServiceById = async (req, res) => {
 
 };
 
-const addService = async (req, res) => {
+const addCar = async (req, res) => {
+
+  const imageData = req.file;
+  let imageUrl = imageData.filename;
 
   try {
+
+    const { data } = req.body;
+    const parsedData = JSON.parse(data);
 
     let {
       name,
       description,
-      available
-    } = req.body;
-
-    Service.create({
-      name,
-      description,
       price,
       available,
-      category
-    }).then(service => {
-      res.send(service);
+      BusinessId
+    } = parsedData;
+
+   
+
+    if (imageData) {
+      const result = await cloudinary.uploader.upload(imageData.path, {
+          upload_preset: 'test_preset'
+      });
+      imageUrl = result.secure_url;
+      deleteFile(imageData.path);
+  }
+
+    Car.create({
+      name:name,
+      description:description,
+      price:price,
+      available:available,
+      imageUrl:imageUrl,
+      BusinessId:BusinessId
+    }).then(car => {
+      res.send(car);
     }
     ).catch(err => {
+      console.log("Error Here:",err);
       res.send(err.errors[0].message);
     })
 
   } catch (e) {
     res.status(500).send();
+    console.log("Error:", e);
   }
 
 
 };
 
-const editServiceById = async (req, res) => {
+const editCarById = async (req, res) => {
 
   try {
     const { id } = req.params;
@@ -106,8 +129,9 @@ const editServiceById = async (req, res) => {
         "name",
         "description",
         "price",
+        "imageUrl",
         "available",
-        "category"
+        "BusinessId"
     ]
 
     let check = true; //Will be used to res.send text if invalid or no collumn name is passed
@@ -119,12 +143,12 @@ const editServiceById = async (req, res) => {
         let key = element;
         const value = req.body[key];
 
-          await Service.update(
+          await Car.update(
             { [key]: value }, 	// attribute
             { where: { id: id } }			// condition
           );
 
-        output_str += `Service ${key} was updated with value ${value}\n`;
+        output_str += `Car ${key} was updated with value ${value}\n`;
       }
     }
 
@@ -141,13 +165,13 @@ const editServiceById = async (req, res) => {
 
 };
 
-const deleteServiceById = async (req, res) => {
+const deleteCarById = async (req, res) => {
   try {
     let {
       id
     } = req.params;
 
-    const row = await Service.findOne({
+    const row = await Car.findOne({
       where: { id: id },
     });
 
@@ -156,7 +180,7 @@ const deleteServiceById = async (req, res) => {
       res.json(row)
       console.log(`Entry for ${row.name} deleted succesfully.`);
     } else {
-      res.send('Service does not exist.')
+      res.send('Car does not exist.')
     }
   } catch (e) {
     res.send(e)
@@ -166,10 +190,10 @@ const deleteServiceById = async (req, res) => {
 
 
 module.exports = {
-  getAllServices,
-  getAllServicesByJobOwner,
-  getServiceById,
-  addService,
-  editServiceById,
-  deleteServiceById
+  getAllCars,
+  getAllCarsByJobOwner,
+  getCarById,
+  addCar,
+  editCarById,
+  deleteCarById
 };

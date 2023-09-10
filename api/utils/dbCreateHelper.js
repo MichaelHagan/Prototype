@@ -7,7 +7,7 @@ const Bussiness = require('../models/businesses');
 const JobOwner = require('../models/jobOwners');
 const Location = require('../models/locations');
 const Order = require('../models/orders');
-const Service = require('../models/services');
+const Car = require('../models/cars');
 const User = require('../models/users');
 
 const adminSeeder = require('../seeders/adminSeeder');
@@ -15,7 +15,7 @@ const businessSeeder = require('../seeders/bussinessSeeder');
 const jobOwnerSeeder = require('../seeders/jobOwnerSeeder');
 const locationSeeder = require('../seeders/locationSeeder');
 const orderSeeder = require('../seeders/orderSeeder');
-const serviceSeeder = require('../seeders/serviceSeeder');
+const carSeeder = require('../seeders/carSeeder');
 const userSeeder = require('../seeders/userSeeder');
 
 const dbConfig = {
@@ -44,17 +44,21 @@ const initializeDatabase = async () => {
 
 const runSeeders = async() =>{
  
-  try {
+     //Check user table, if empty, run seeders
+     try {
+      let countResponse = await Admin.count();
+      if(countResponse === 0){
     // Run seeders sequentially
     await adminSeeder.up(null, Admin.sequelize);
     await userSeeder.up(null, User.sequelize);
     await locationSeeder.up(null, Location.sequelize);
     await jobOwnerSeeder.up(null, JobOwner.sequelize);
     await businessSeeder.up(null, Bussiness.sequelize);
-    await serviceSeeder.up(null, Service.sequelize);
+    await carSeeder.up(null, Car.sequelize);
     await orderSeeder.up(null, Order.sequelize);
 
     console.log('Seeders completed successfully');
+      }
   } catch (error) {
     console.error('Error running seeders:', error);
   }

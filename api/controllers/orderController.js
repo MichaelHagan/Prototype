@@ -1,7 +1,8 @@
 const Order = require('../models/orders');
 const Business = require('../models/businesses');
-const Service = require('../models/services');
+const Car = require('../models/cars');
 const { sort } = require('../utils/sortHelper');
+const {validateOrderTime} = require('../utils/validationHelper')
 
 
 
@@ -9,11 +10,20 @@ const getAllOrders = async (req, res) => {
 
   try {
 
+    let filter = req.query.id;
+
     Order.findAll()
       .then(orders => {
+        let sortedOrders;
+        if (filter) {
+          // Apply the filter logic
+          sortedOrders = orders.filter((order) =>
+          order.id.toString().includes(filter) // Adjust the filtering condition based on your requirements
+          );
+        } else { sortedOrders = orders }
+        sortedOrders = sort(req, sortedOrders);
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.header('X-Total-Count', `${orders.length}`);
-        let sortedOrders = sort(req, orders);
+        res.header('X-Total-Count', `${sortedOrders.length}`);
         res.send(sortedOrders);
       })
       .catch(err => {
@@ -25,10 +35,19 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+const getAllOrdersByCarId = async (id) =>{
+  let orders = await Order.findAll({
+    where: { CarId:id},
+  });
+  return orders;
+}
+
 const getAllOrdersByJobOwner = async (req, res) => {
 
+  
   try {
-
+    
+    let filter = req.query.id;
     let {
       id
     } = req.payload;
@@ -37,19 +56,26 @@ const getAllOrdersByJobOwner = async (req, res) => {
       where: { jobOwnerId: id },
     });
 
-    let services = await Service.findAll({
+    let cars = await Car.findAll({
       where: { BusinessId: businesses.map(business => business.id) },
     });
     
     let orders = await Order.findAll({
-      where: { ServiceId: services.map(service => service.id) },
+      where: { CarId: cars.map(car => car.id) },
     });
+
+    let sortedOrders;
+    if (filter) {
+      // Apply the filter logic
+      sortedOrders = orders.filter((order) =>
+        order.id.toString().includes(filter) // Adjust the filtering condition based on your requirements
+      );
+    } else { sortedOrders = orders }
+    sortedOrders = sort(req, sortedOrders);
     res.header('Access-Control-Expose-Headers', 'X-Total-Count');
-    res.header('X-Total-Count', `${orders.length}`);
-    let sortedOrders = sort(req, orders);
-
+    res.header('X-Total-Count', `${sortedOrders.length}`);
     res.send(sortedOrders);
-
+    
   } catch (e) {
     console.log(e);
     res.send(e);
@@ -82,8 +108,18 @@ const addOrder = async (req, res) => {
       customer_number,
       total_price,
       order_state,
-      payment
+      payment,
+      pickup_time,
+      dropoff_time,
+      UserId,
+      CarId
     } = req.body;
+
+    let validated = await validateOrderTime(req.body);
+
+    if(!validated.result){
+      return res.status(400).json({ error: validated.message });
+    }
 
     Order.create({
         details,
@@ -91,16 +127,20 @@ const addOrder = async (req, res) => {
         customer_number,
         total_price,
         order_state,
-        payment
+        payment,
+        pickup_time,
+        dropoff_time,
+        UserId,
+        CarId
     }).then(order => {
       res.send(order);
     }
     ).catch(err => {
-      res.send(err.errors[0].message);
+      console.log("Order Error:",err);
     })
 
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 
 
@@ -118,7 +158,11 @@ const editOrderById = async (req, res) => {
         "customer_number",
         "total_price",
         "order_state",
-        "payment"
+        "payment",
+        "pickup_time",
+        "dropoff_time",
+        "UserId",
+        "CarId"
     ]
 
     let check = true; //Will be used to res.send text if invalid or no collumn name is passed
@@ -175,9 +219,9 @@ const deleteOrderById = async (req, res) => {
 };
 
 
-
 module.exports = {
   getAllOrders,
+  getAllOrdersByCarId,
   getAllOrdersByJobOwner,
   getOrderById,
   addOrder,
