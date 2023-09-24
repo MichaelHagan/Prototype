@@ -1,8 +1,8 @@
 import { stringify } from 'query-string';
-import { fetchUtils, DataProvider } from 'ra-core';
+import { fetchUtils } from 'ra-core';
 
 
-const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
+const Provider =(apiUrl, httpClient = fetchUtils.fetchJson) => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
@@ -84,36 +84,30 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
     create: (resource, params) => {
+        try{
         if (resource === 'cars') {
-          const formData = new FormData();         
-      
-          let imagesArray = [];
+          const formData = new FormData();
       
           // Check if there's a single image or multiple images
           if (Array.isArray(params.data.images) && params.data.images.length > 0) {
             // If there are multiple images, append them to the imagesArray
             params.data.images.forEach((imageFile) => {
               if (imageFile.url.rawFile instanceof File) {
-                imagesArray.push(imageFile.url.rawFile);
+                formData.append('images',imageFile.url.rawFile);
               }
             });
           } else if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
             // If there's only a single image, append it to the imagesArray
-            imagesArray.push(params.data.imageUrl.rawFile);
+            formData.append('images',params.data.imageUrl.rawFile);
           }
-      
-          formData.append('images', imagesArray);
       
           const { images, imageUrl, ...otherParams } = params.data;
       
           formData.append('data', JSON.stringify(otherParams));
-
-          console.log("Images:", imagesArray);
-          
       
           return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
-            body: formData,
+            body: formData
           }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
         } else {
             console.log("test");
@@ -125,6 +119,9 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
             data: { ...params.data, id: json.id },
           }));
         }
+    }catch(e){
+        console.log("Create Error:", e);
+    }
       },
     delete: (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {

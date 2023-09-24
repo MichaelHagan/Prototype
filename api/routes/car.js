@@ -23,8 +23,7 @@ router.get('/jobOwner', authenticate, getAllCarsByJobOwner)
 router.get('/:id', authenticate, getCarById)
 
 //Add car
-router.post('/', authenticate, upload.array('images'), addCar);
-
+router.post('/', authenticate, upload.array('images',12), addCar);
 
 //Update car
 router.put('/:id', authenticate, upload.single('image'), editCarById)

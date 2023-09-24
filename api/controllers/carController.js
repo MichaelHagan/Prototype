@@ -70,9 +70,6 @@ const getCarById = async (req, res) => {
 };
 
 const addCar = async (req, res) => {
-  const { mainImageIndex } = req.query; // Extract mainImageIndex from query parameters
-
-  // Assuming req.files is an array of uploaded images
   const { data } = req.body;
   const images = req.files;
   const parsedData = JSON.parse(data);
@@ -84,42 +81,38 @@ const addCar = async (req, res) => {
     BusinessId
   } = parsedData;
 
-  console.log("\n\nFiles:",images);
   try {
-    let imageUrl = null;
 
-    if (images.length > 0) {
-      const imageUploadPromises = images.map(async (image, index) => {
+    let firstImage = true;
+    let car;
+
+    for (const image of images)  {
+        
         const result = await cloudinary.uploader.upload(image.path, {
           upload_preset: 'test_preset',
         });
 
-        if (index === parseInt(mainImageIndex, 10)) {
-          imageUrl = result.secure_url;
+        deleteFile(image.path);
+
+        if (firstImage) {
+            car = await Car.create({
+            name:name,
+            description:description,
+            price:price,
+            available:available,
+            imageUrl: result.secure_url,
+            BusinessId:BusinessId
+          });
         }
-
-        // Create an Image entry for each uploaded image
-        return Image.create({
+        
+        await Image.create({
           url: result.secure_url,
-          isMain: index === parseInt(mainImageIndex, 10), // Convert mainImageIndex to integer for comparison
-          carId: null, // You'll update this with the actual carId later
+          isMain: firstImage,
+          carId: car.id,
         });
-      });
-
-      await Promise.all(imageUploadPromises);
-    }
-
-    const car = await Car.create({
-      name:name,
-      description:description,
-      price:price,
-      available:available,
-      imageUrl:imageUrl,
-      BusinessId:BusinessId
-    });
-
-    // Update the carId in the Image entries
-    await Image.update({ carId: car.id }, { where: { isMain: true } });
+        
+        firstImage = false;
+      };
 
     res.send(car);
   } catch (e) {
