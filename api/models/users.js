@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
 const order = require('./orders');
+const business = require('./businesses');
 
 const user = db.define('User',{
 id:{
@@ -30,5 +31,7 @@ allowNull:false
 );
 
 user.hasMany(order);
+user.hasMany(business);
+
 
 module.exports = user;

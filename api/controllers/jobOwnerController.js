@@ -1,6 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const JobOwner = require('../models/jobOwners');
+const JobOwner = require('../models/users');
 const bcrypt = require('bcrypt');
 const { sort } = require('../utils/sortHelper');
 
@@ -9,7 +9,9 @@ const getAllJobOwners = async (req, res) => {
 
   try {
 
-    JobOwner.findAll()
+    JobOwner.findAll({where:{
+      RoleId:2
+    }})
       .then(jobOwners => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
         res.header('X-Total-Count', `${jobOwners.length}`);
@@ -59,6 +61,7 @@ const addJobOwner = async (req, res) => {
       email: email.toLowerCase(),
       phone_number,
       password: hashedPassword,
+      RoleId:2
     }).then(jobOwner => {
       res.send(jobOwner);
     }
@@ -83,11 +86,13 @@ const jobOwnerLogin = async (req, res) => {
 
     const row = email ? await JobOwner.findOne({
       where: {
-        email: email.toLowerCase()
+        email: email.toLowerCase(),
+        RoleId:2
       },
     }) : await JobOwner.findOne({
       where: {
-        phone_number: number
+        phone_number: number,
+        RoleId:2
       },
     });
 

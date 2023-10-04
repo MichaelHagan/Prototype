@@ -53,7 +53,7 @@ const getAllOrdersByJobOwner = async (req, res) => {
     } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: id },
+      where: { UserId: id },
     });
 
     let cars = await Car.findAll({

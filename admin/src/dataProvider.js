@@ -6,15 +6,21 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson) => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
+        const { RoleId, ...otherFilters } = params.filter || {};
         const query = {
-            ...fetchUtils.flattenObject(params.filter),
+            ...fetchUtils.flattenObject(otherFilters), // Use other filters excluding RoleId
             _sort: field,
             _order: order,
             _start: (page - 1) * perPage,
             _end: page * perPage,
         };
+    
+        if (RoleId) {
+            query.RoleId = RoleId;
+        }
+    
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
-
+    
         return httpClient(url).then(({ headers, json }) => {
             if (!headers.has('x-total-count')) {
                 throw new Error(
@@ -29,7 +35,8 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson) => ({
                 ),
             };
         });
-    },
+    }
+    ,
 
     getOne: (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`).then(({ json }) => ({

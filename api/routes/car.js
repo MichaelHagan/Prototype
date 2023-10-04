@@ -5,6 +5,7 @@ const multer = require('multer');
 const upload = multer({ dest: './public/uploads' });
 const {
   getAllCars,
+  getAllApprovedCars,
   getAllCarsByJobOwner,
   getCarById,
   addCar,
@@ -15,6 +16,7 @@ const {
 //Get all cars
 router.get('/', getAllCars);
 
+router.get('/approved',authenticate, getAllApprovedCars);
 
 // Get all cars for a given jobOwner
 router.get('/jobOwner', authenticate, getAllCarsByJobOwner)

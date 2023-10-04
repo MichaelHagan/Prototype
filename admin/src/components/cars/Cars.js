@@ -58,6 +58,7 @@ export const CarList = () => {
           <TextField source="name" />
           <TextField source="description" />
           <BooleanField source="available" />
+          <BooleanField source="approved" />
           <NumberField source="price" label="Price/day" />
           <ReferenceField label="Provider" source="BusinessId" reference="businesses">
             <TextField source="name" />
@@ -104,6 +105,7 @@ export const CarEdit = () => (
       <TextInput source="name" validate={validateName} style={{ width: '40%' }} />
       <TextInput source="description" multiline rows={5} validate={validateDescription} style={{ width: '40%' }} />
       <BooleanInput source="available" />
+      <BooleanInput source="approved" />
       <NumberInput source="price" style={{ width: '20%' }} />
       <TextInput source="imageUrl" style={{ width: '100%' }} label="Current Image Url" disabled />
       <ImageInput source="imageUrl" label="Change Image">

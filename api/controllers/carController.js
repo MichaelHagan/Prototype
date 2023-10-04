@@ -26,6 +26,29 @@ const getAllCars = async (req, res) => {
   }
 };
 
+const getAllApprovedCars = async (req, res) => {
+  try {
+
+    Car.findAll({
+      where:{
+        approved:true
+      }
+    })
+      .then(cars => {
+        res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.header('X-Total-Count', `${cars.length}`);
+        let sortedCars = sort(req, cars);
+        res.send(sortedCars);
+      })
+      .catch(err => {
+        console.log(err)
+        res.send("Error")
+      })
+  } catch (e) {
+    res.send(e)
+  }
+}
+
 const getAllCarsByJobOwner = async (req, res) => {
 
   try {
@@ -35,7 +58,7 @@ const getAllCarsByJobOwner = async (req, res) => {
     } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: id },
+      where: { UserId: id },
     });
 
     let cars = await Car.findAll({
@@ -134,6 +157,7 @@ const editCarById = async (req, res) => {
         "price",
         "imageUrl",
         "available",
+        "approved",
         "BusinessId"
     ]
 
@@ -194,6 +218,7 @@ const deleteCarById = async (req, res) => {
 
 module.exports = {
   getAllCars,
+  getAllApprovedCars,
   getAllCarsByJobOwner,
   getCarById,
   addCar,

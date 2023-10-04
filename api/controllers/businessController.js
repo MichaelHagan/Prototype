@@ -31,7 +31,7 @@ const getAllBusinessesByJobOwner = async (req, res) => {
     } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: id },
+      where: { UserId: id },
     });
     res.header('Access-Control-Expose-Headers', 'X-Total-Count');
     res.header('X-Total-Count', `${businesses.length}`);
@@ -81,7 +81,7 @@ const addBusiness = async (req, res) => {
       description,
       available,
       LocationId,
-      jobOwnerId:ownerId
+      UserId:ownerId
 
     }).then(business => {
       res.send(business);
