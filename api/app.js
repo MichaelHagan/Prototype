@@ -16,6 +16,7 @@ let locationRouter = require('./routes/location');
 let orderRouter = require('./routes/order');
 let carRouter = require('./routes/car')
 let usersRouter = require('./routes/user');
+let imageRouter = require('./routes/image');
 
 
 var app = express();
@@ -39,6 +40,7 @@ app.use('/locations', locationRouter);
 app.use('/orders', orderRouter);
 app.use('/cars', carRouter)
 app.use('/users', usersRouter);
+app.use('/images', imageRouter);
 
 
 //db models sync

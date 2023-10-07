@@ -1,6 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const Admin = require('../models/admins');
+const Admin = require('../models/users');
 const bcrypt = require('bcrypt');
 const { sort } = require('../utils/sortHelper');
 
@@ -9,7 +9,9 @@ const getAllAdmins = async (req, res) => {
 
   try {
 
-    Admin.findAll()
+    Admin.findAll({where:{
+      RoleId:1
+    }})
       .then(admins => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
         res.header('X-Total-Count', `${admins.length}`);
@@ -59,6 +61,7 @@ const addAdmin = async (req, res) => {
       email: email.toLowerCase(),
       phone_number,
       password: hashedPassword,
+      RoleId:1
     }).then(admin => {
       res.send(admin);
     }
@@ -83,11 +86,13 @@ const adminLogin = async (req, res) => {
 
     const row = email ? await Admin.findOne({
       where: {
-        email: email.toLowerCase()
+        email: email.toLowerCase(),
+        RoleId: 1
       },
     }) : await Admin.findOne({
       where: {
-        phone_number: number
+        phone_number: number,
+        RoleId: 1
       },
     });
 

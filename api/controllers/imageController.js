@@ -34,7 +34,7 @@ const getAllImagesByJobOwner = async (req, res) => {
     } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: id },
+      where: { UserId: id },
     });
 
     let images = await Image.findAll({

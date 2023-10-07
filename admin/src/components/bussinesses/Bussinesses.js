@@ -41,7 +41,7 @@ export const BussinessList = () => {
             <ReferenceField label="Location" source="LocationId" reference="locations">
                 <TextField source="location" />
             </ReferenceField>
-            <ReferenceField label="Owner" source="jobOwnerId" reference="jobOwners">
+            <ReferenceField label="Owner" source="UserId" reference="jobOwners">
                 <TextField source="name" />
             </ReferenceField>
             <DateField source="createdAt" />

@@ -1,20 +1,26 @@
 import { stringify } from 'query-string';
-import { fetchUtils, DataProvider } from 'ra-core';
+import { fetchUtils } from 'ra-core';
 
 
-const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
+const Provider =(apiUrl, httpClient = fetchUtils.fetchJson) => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
+        const { RoleId, ...otherFilters } = params.filter || {};
         const query = {
-            ...fetchUtils.flattenObject(params.filter),
+            ...fetchUtils.flattenObject(otherFilters), // Use other filters excluding RoleId
             _sort: field,
             _order: order,
             _start: (page - 1) * perPage,
             _end: page * perPage,
         };
+    
+        if (RoleId) {
+            query.RoleId = RoleId;
+        }
+    
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
-
+    
         return httpClient(url).then(({ headers, json }) => {
             if (!headers.has('x-total-count')) {
                 throw new Error(
@@ -29,7 +35,8 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
                 ),
             };
         });
-    },
+    }
+    ,
 
     getOne: (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`).then(({ json }) => ({
@@ -83,33 +90,46 @@ const Provider =(apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
                 })
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
-
     create: (resource, params) => {
+        try{
         if (resource === 'cars') {
-            const formData = new FormData();
-
-            if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
-                formData.append('image', params.data.imageUrl.rawFile);
-            }
-
-            const { imageUrl, ...otherParams } = params.data;
-
-            formData.append('data', JSON.stringify(otherParams));
-
-            return httpClient(`${apiUrl}/${resource}`, {
-                method: 'POST',
-                body: formData,
-            }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
-        }
-       else{ return httpClient(`${apiUrl}/${resource}`, {
+          const formData = new FormData();
+      
+          // Check if there's a single image or multiple images
+          if (Array.isArray(params.data.images) && params.data.images.length > 0) {
+            // If there are multiple images, append them to the imagesArray
+            params.data.images.forEach((imageFile) => {
+              if (imageFile.url.rawFile instanceof File) {
+                formData.append('images',imageFile.url.rawFile);
+              }
+            });
+          } else if (params.data.imageUrl && params.data.imageUrl.rawFile instanceof File) {
+            // If there's only a single image, append it to the imagesArray
+            formData.append('images',params.data.imageUrl.rawFile);
+          }
+      
+          const { images, imageUrl, ...otherParams } = params.data;
+      
+          formData.append('data', JSON.stringify(otherParams));
+      
+          return httpClient(`${apiUrl}/${resource}`, {
+            method: 'POST',
+            body: formData
+          }).then(({ json }) => ({ data: { ...params.data, id: json.id } }));
+        } else {
+            console.log("test");
+            
+          return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
             body: JSON.stringify(params.data),
-        }).then(({ json }) => ({
+          }).then(({ json }) => ({
             data: { ...params.data, id: json.id },
-        }))
+          }));
+        }
+    }catch(e){
+        console.log("Create Error:", e);
     }
-    }
-        ,
+      },
     delete: (resource, params) =>
         httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'DELETE',

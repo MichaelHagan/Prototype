@@ -9,7 +9,11 @@ const getAllUsers = async (req, res) => {
 
   try {
 
-    User.findAll()
+    User.findAll({
+      where:{
+        RoleId:3
+      }
+    })
       .then(users => {
         res.header('Access-Control-Expose-Headers', 'X-Total-Count');
         res.header('X-Total-Count', `${users.length}`);
@@ -59,6 +63,7 @@ const addUser = async (req, res) => {
       email: email.toLowerCase(),
       phone_number,
       password: hashedPassword,
+      RoleId:3
     }).then(user => {
       res.send(user);
     }
@@ -83,11 +88,13 @@ const userLogin = async (req, res) => {
 
     const row = email ? await User.findOne({
       where: {
-        email: email.toLowerCase()
+        email: email.toLowerCase(),
+        RoleId:3
       },
     }) : await User.findOne({
       where: {
-        phone_number: number
+        phone_number: number,
+        RoleId:3
       },
     });
 
