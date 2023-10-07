@@ -5,12 +5,14 @@ import {UserList, UserEdit, UserCreate} from "./components/users/Users";
 import { BussinessList, BussinessEdit, BussinessCreate } from "./components/bussinesses/Bussinesses";
 import { CarList, CarEdit, CarCreate } from "./components/cars/Cars";
 import { OrderList, OrderEdit, OrderCreate } from "./components/orders/Orders";
+import { ImageCreate, ImageList, ImageEdit } from "./components/carimages/Images";
 import PersonIcon from '@mui/icons-material/Person';
 import GarageIcon from '@mui/icons-material/EmojiTransportation';
 import CarIcon from '@mui/icons-material/CarRental';
+import ImageIcon from '@mui/icons-material/Image';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LoginPage from "./components/login/LoginPage";
-import Provider from "./dataProvider.ts";
+import Provider from "./dataProvider.js";
 import OrderIcon from "@mui/icons-material/DeliveryDining";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import GroupIcon from '@mui/icons-material/Group';
@@ -52,6 +54,14 @@ const App = () => (
     edit={CarEdit} 
     create={CarCreate}
     icon={CarIcon} 
+    />
+
+    <Resource 
+    name="images" 
+    list={ImageList} 
+    edit={ImageEdit} 
+    create={ImageCreate}
+    icon={ImageIcon} 
     />
 
     <Resource 

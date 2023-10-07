@@ -3,6 +3,7 @@ const Business = require('../models/businesses');
 const { sort } = require('../utils/sortHelper');
 const {deleteFile} = require('../utils/fileDeleteHelper');
 const { cloudinary } = require('../config/cloudinary');
+const Image = require('../models/images')
 
 
 const getAllCars = async (req, res) => {
@@ -25,6 +26,29 @@ const getAllCars = async (req, res) => {
   }
 };
 
+const getAllApprovedCars = async (req, res) => {
+  try {
+
+    Car.findAll({
+      where:{
+        approved:true
+      }
+    })
+      .then(cars => {
+        res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.header('X-Total-Count', `${cars.length}`);
+        let sortedCars = sort(req, cars);
+        res.send(sortedCars);
+      })
+      .catch(err => {
+        console.log(err)
+        res.send("Error")
+      })
+  } catch (e) {
+    res.send(e)
+  }
+}
+
 const getAllCarsByJobOwner = async (req, res) => {
 
   try {
@@ -34,7 +58,7 @@ const getAllCarsByJobOwner = async (req, res) => {
     } = req.payload;
 
     let businesses = await Business.findAll({
-      where: { jobOwnerId: id },
+      where: { UserId: id },
     });
 
     let cars = await Car.findAll({
@@ -69,55 +93,57 @@ const getCarById = async (req, res) => {
 };
 
 const addCar = async (req, res) => {
-
-  const imageData = req.file;
-  let imageUrl = imageData.filename;
+  const { data } = req.body;
+  const images = req.files;
+  const parsedData = JSON.parse(data);
+  let {
+    name,
+    description,
+    price,
+    available,
+    BusinessId
+  } = parsedData;
 
   try {
 
-    const { data } = req.body;
-    const parsedData = JSON.parse(data);
+    let firstImage = true;
+    let car;
 
-    let {
-      name,
-      description,
-      price,
-      available,
-      BusinessId
-    } = parsedData;
+    for (const image of images)  {
+        
+        const result = await cloudinary.uploader.upload(image.path, {
+          upload_preset: 'test_preset',
+        });
 
-   
+        deleteFile(image.path);
 
-    if (imageData) {
-      const result = await cloudinary.uploader.upload(imageData.path, {
-          upload_preset: 'test_preset'
-      });
-      imageUrl = result.secure_url;
-      deleteFile(imageData.path);
-  }
+        if (firstImage) {
+            car = await Car.create({
+            name:name,
+            description:description,
+            price:price,
+            available:available,
+            imageUrl: result.secure_url,
+            BusinessId:BusinessId
+          });
+        }
+        
+        await Image.create({
+          url: result.secure_url,
+          isMain: firstImage,
+          carId: car.id,
+        });
+        
+        firstImage = false;
+      };
 
-    Car.create({
-      name:name,
-      description:description,
-      price:price,
-      available:available,
-      imageUrl:imageUrl,
-      BusinessId:BusinessId
-    }).then(car => {
-      res.send(car);
-    }
-    ).catch(err => {
-      console.log("Error Here:",err);
-      res.send(err.errors[0].message);
-    })
-
+    res.send(car);
   } catch (e) {
     res.status(500).send();
     console.log("Error:", e);
   }
-
-
 };
+
 
 const editCarById = async (req, res) => {
 
@@ -131,6 +157,7 @@ const editCarById = async (req, res) => {
         "price",
         "imageUrl",
         "available",
+        "approved",
         "BusinessId"
     ]
 
@@ -191,6 +218,7 @@ const deleteCarById = async (req, res) => {
 
 module.exports = {
   getAllCars,
+  getAllApprovedCars,
   getAllCarsByJobOwner,
   getCarById,
   addCar,

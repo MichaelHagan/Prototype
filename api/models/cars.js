@@ -29,6 +29,11 @@ available:{
 type:Sequelize.BOOLEAN,
 allowNull:false,
 defaultValue: true
+},
+approved:{
+  type:Sequelize.BOOLEAN,
+  allowNull:false,
+  defaultValue: false
 }
 },{
   tableName:'cars'  
